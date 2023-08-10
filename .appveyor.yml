@@ -1,28 +1,17 @@
-name: Java CI
+image: Ubuntu
 
-on: [ push ]
+stack: jdk 11
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+branches:
+  only:
+    - main
 
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Run SUT
-        run: java -jar ./artefacts/app-order.jar & sleep 10
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Headless run
-        run: ./gradlew test --info -Dselenide.headless=true
+build: off
+
+install:
+
+  - java -jar ./artefacts/app-order.jar & sleep 10
+  - chmod +x gradlew
+
+build_script:
+  - ./gradlew test --info -Dselenide.headless=true
