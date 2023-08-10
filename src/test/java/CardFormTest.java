@@ -1,12 +1,13 @@
-import io.github.bonigarcia.wdm.WebDriverManager;
+//import io.github.bonigarcia.wdm.WebDriverManager;
+
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 
 import java.util.List;
 
@@ -16,14 +17,19 @@ public class CardFormTest {
 
     WebDriver driver;
 
-    @BeforeAll
-    static void setupClass() {
-        WebDriverManager.firefoxdriver().setup();
-    }
+    // @BeforeAll
+    // static void setupClass() {
+    // WebDriverManager.firefoxdriver().setup();
+    // }
 
     @BeforeEach
     void setupTest() {
-        driver = new FirefoxDriver();
+        FirefoxOptions options = new FirefoxOptions();
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--headless");
+        driver = new FirefoxDriver(options);
+        driver.get("http://localhost:9999/");
     }
 
     @AfterEach
@@ -34,7 +40,6 @@ public class CardFormTest {
 
     @Test
     void testFormSuccess() throws InterruptedException {
-        driver.get("http://localhost:9999/");
         driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Воронина Елена");
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79109643232");
         driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
@@ -47,7 +52,6 @@ public class CardFormTest {
 
     @Test
     void testFormFailName() throws InterruptedException {
-        driver.get("http://localhost:9999/");
         driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Воронина Elena");
         driver.findElement(By.cssSelector("button")).click();
         String text = driver.findElement(By.className("input__sub")).getText();
@@ -58,7 +62,6 @@ public class CardFormTest {
 
     @Test
     void testFormNoName() throws InterruptedException {
-        driver.get("http://localhost:9999/");
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79109643232");
         driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         driver.findElement(By.cssSelector("button")).click();
@@ -70,7 +73,6 @@ public class CardFormTest {
 
     @Test
     void testFormFailNum() throws InterruptedException {
-        driver.get("http://localhost:9999/");
         driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Воронина Елена");
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+7910964323");
         driver.findElement(By.cssSelector("button")).click();
@@ -83,7 +85,6 @@ public class CardFormTest {
 
     @Test
     void testFormNoNum() throws InterruptedException {
-        driver.get("http://localhost:9999/");
         driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Воронина Елена");
         driver.findElement(By.cssSelector("button")).click();
         List<WebElement> elementList = driver.findElements(By.className("input__sub"));
@@ -94,8 +95,7 @@ public class CardFormTest {
     }
 
     @Test
-    void testFormFailAgreem() throws InterruptedException {
-        driver.get("http://localhost:9999/");
+    void testFormFailAgreement() throws InterruptedException {
         driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Воронина Елена");
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79109643232");
         driver.findElement(By.cssSelector("button")).click();
