@@ -10,7 +10,7 @@ build: off
 
 install:
 
-  - java -jar ./artefacts/app-order.jar
+  - java -jar ./artefacts/app-order.jar &
   - chmod +x gradlew
 
 build_script:
